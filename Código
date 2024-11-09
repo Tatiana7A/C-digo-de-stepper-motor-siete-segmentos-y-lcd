@@ -1,0 +1,111 @@
+#include <LiquidCrystal.h>
+
+#include <Stepper.h>
+
+#include <IRremote.h>
+Stepper motor1(2048, 38, 39, 40, 41);
+Stepper motor2(2048, 44, 45, 46, 47);
+
+LiquidCrystal lcd(32, 31, 25, 24, 23, 22);
+void setup() {
+  // put your setup code here, to run once:
+motor1.setSpeed (1);
+motor2.setSpeed (1);
+pinMode (3, OUTPUT);
+pinMode (4, OUTPUT);
+pinMode (5, OUTPUT);
+pinMode (6, OUTPUT);
+pinMode (7, OUTPUT);
+pinMode (8, OUTPUT);
+pinMode (2, OUTPUT);
+Serial.begin(9600);
+IrReceiver.begin(9);
+
+lcd.begin (16,2);
+lcd.setCursor  (3,0);
+lcd.print ("Bienvenidos");
+delay (3000);
+lcd.clear();
+lcd.setCursor (3,0);
+lcd.print ("Proyecto de");
+lcd.setCursor (1,2);
+lcd.print ("Stepper motor");
+delay (2000);
+lcd.clear ();
+lcd.setCursor (7,0);
+lcd.print ("By");
+delay (1000);
+lcd.setCursor (1,2);
+lcd.print ("Tatiana Ochoa");
+
+}
+
+void loop() {
+ 
+  while (IrReceiver.decode() == 0) {
+  }
+int signalRf = IrReceiver.decodedIRData.command;
+Serial.println(signalRf);
+delay(500);
+IrReceiver.resume();
+ if (signalRf==9){
+  lcd.clear ();
+  motor1.step (10);
+  lcd.setCursor (6,0);
+  lcd.print ("Right");
+  lcd.setCursor (6,1);
+  lcd.print (">>>>>");
+  digitalWrite (7,HIGH);
+  digitalWrite (6,HIGH);
+  digitalWrite (4,HIGH);
+  digitalWrite (3,HIGH);
+  digitalWrite (2,HIGH);
+  digitalWrite (8,HIGH);
+  digitalWrite (5,LOW);
+ }
+ if (signalRf==7){
+ lcd.clear ();
+ motor1.step (-10);
+ lcd.setCursor (6,0);
+ lcd.print ("Left");
+ lcd.setCursor (6,1);
+ lcd.print ("<<<<");
+ digitalWrite (2, LOW);
+ digitalWrite (3, LOW);
+ digitalWrite (4, LOW);
+ digitalWrite (5, HIGH);
+ digitalWrite (6, HIGH);
+ digitalWrite (7, HIGH);
+ digitalWrite (8, LOW);
+ }
+ if (signalRf==67){
+  lcd.clear ();
+  motor2.step (10);
+  lcd.setCursor (6,0);
+  lcd.print ("Right");
+  lcd.setCursor (6,1);
+  lcd.print (">>>>>");
+  digitalWrite (7,HIGH);
+  digitalWrite (6,HIGH);
+  digitalWrite (4,HIGH);
+  digitalWrite (3,HIGH);
+  digitalWrite (2,HIGH);
+  digitalWrite (8,HIGH);
+  digitalWrite (5,LOW);
+ }
+ if (signalRf==68){
+ lcd.clear ();
+ motor2.step (-10);
+ lcd.setCursor (6,0);
+ lcd.print ("Left");
+ lcd.setCursor (6,1);
+ lcd.print ("<<<<");
+ digitalWrite (2, LOW);
+ digitalWrite (3, LOW);
+ digitalWrite (4, LOW);
+ digitalWrite (5, HIGH);
+ digitalWrite (6, HIGH);
+ digitalWrite (7, HIGH);
+ digitalWrite (8, LOW);
+ }
+}
